@@ -51,4 +51,55 @@ interface IEpisode {
     download: string;
   }
 
-export type {EpisodeData,IAnimeEntry,IAnimeInfo,IAnimePage,IEpisode,Source}
+  interface Episode {
+    id: string;
+    number: number;
+    title: string;
+    isFiller: boolean;
+    url: string;
+  }
+  interface Recommendation {
+    id: string;
+    title: string;
+    url: string;
+    image: string;
+    duration: string;
+    japaneseTitle: string;
+    type: string;
+    nsfw: boolean;
+    sub: number;
+    dub: number;
+    episodes: number;
+  }
+  interface RelatedAnime {
+    id: string;
+    title: string;
+    url: string;
+    image: string;
+    japaneseTitle: string;
+    type: string;
+    sub: number;
+    dub: number;
+    episodes: number;
+  }
+  interface IAnimeEntryDetails {
+    id: string;
+    title: string;
+    malID: number;
+    alID: number;
+    japaneseTitle: string;
+    image: string;
+    description: string;
+    type: string;
+    url: string;
+    recommendations: Recommendation[];
+    relatedAnime: RelatedAnime[];
+    subOrDub: string;
+    hasSub: boolean;
+    hasDub: boolean;
+    totalEpisodes: number;
+    episodes: Episode[];
+  }
+  
+
+export type {EpisodeData,IAnimeEntry,IAnimeInfo,IAnimePage,IEpisode,Source,IAnimeEntryDetails,}

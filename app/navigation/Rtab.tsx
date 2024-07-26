@@ -15,7 +15,7 @@ import Home from '../screen/Home';
 import Test from '../screen/Test';
 import {colors, tw} from '../exports/exports';
 
-import { GoFileDirectory, GoHeart, GoHome,  GoSearch} from "rn-icons/go"
+import {GoFileDirectory, GoHeart, GoHome, GoSearch} from 'rn-icons/go';
 import Gallery from '../screen/Gallery';
 import User from '../screen/User';
 if (Platform.OS === 'android') {
@@ -26,9 +26,11 @@ if (Platform.OS === 'android') {
 export default function Rtab() {
   let Tabs = createBottomTabNavigator();
   return (
-    <Tabs.Navigator screenOptions={{
-      headerShown:false
-    }} tabBar={props => <CustomTab {...props} />}>
+    <Tabs.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      tabBar={props => <CustomTab {...props} />}>
       <Tabs.Screen name="Home" component={Home} />
       <Tabs.Screen name="Search" component={Test} />
       <Tabs.Screen name="Gallery" component={Gallery} />
@@ -40,7 +42,7 @@ export default function Rtab() {
 let CustomTab = (props: BottomTabBarProps) => {
   let {routes, index: currentIndex} = props.state;
   return (
-    <View 
+    <View
       style={tw(
         'bg-gray-950 h-15  absolute bottom-0 w-full flex-row justify-evenly',
       )}>
@@ -64,7 +66,7 @@ let CustomTab = (props: BottomTabBarProps) => {
     </View>
   );
 };
-let icon_size = 22 ;
+let icon_size = 22;
 let Icons = [
   (color: string) => <GoHome size={icon_size} fill={color} />,
   (color: string) => <GoSearch size={icon_size} fill={color} />,
@@ -98,15 +100,18 @@ let TabPill = ({
       style={tw('h-full flex-row items-center gap-2 justify-center px-2')}>
       {/* <Text>{name}</Text> */}
       <View
-        style={tw(
-          'self-center items-center bg-opacity-20 flex-row gap-2  p-2 rounded-lg px-3',
-          focused ? 'bg-yellow-500' : '',
-        )}>
+        style={[
+          tw(
+            'self-center items-center bg-opacity-20 flex-row gap-2  p-2 px-3',
+            focused ? 'bg-yellow-500' : '',
+          ),
+          {
+            borderRadius: 8,
+          },
+        ]}>
         {Icons[index](isFocused ? colors.yellow[300] : colors.neutral[700])}
 
-        {isFocused ? (
-          <Text style={tw('text-yellow-300 ')}>{name}</Text>
-        ) : null}
+        {isFocused ? <Text style={tw('text-yellow-300 ')}>{name}</Text> : null}
       </View>
     </TouchableOpacity>
   );

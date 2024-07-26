@@ -11,36 +11,44 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {colors, tw} from '../exports/exports';
 import {PaginationProps, SwiperFlatList} from 'react-native-swiper-flatlist';
 import {useQuery} from '@tanstack/react-query';
-import {fetchPopular} from '../api/api';
+import {fetchPopular, fetchTop} from '../api/api';
 import {IAnimeEntry, IAnimePage} from '../exports/interface';
 import {GoDotFill, GoPlay} from 'rn-icons/go';
 import {LinearGradient} from 'react-native-linear-gradient';
 let width = Dimensions.get('window').width;
+let height = Dimensions.get('screen').height;
 export default function CarouselSlider() {
   const {
     data: querydata,
     isLoading,
     isError,
   } = useQuery<IAnimePage>({
-    queryKey: ['popular', 'home'],
-    queryFn: fetchPopular.bind(null, {page: 1}),
+    queryKey: ['top', 'home'],
+    queryFn: fetchTop.bind(null, {page: 1}),
   });
-  const renderItems = isError
-    ? Array(10)
-        .fill(null)
-        .map((_, index) => (
-          <View key={index}>
-            <Text>fetch failed</Text>
-          </View>
-        ))
-    : (querydata?.results || Array(10).fill(null)).map((item, index) => (
-        <View key={index}>
-          <Text>{querydata ? 'thanks' : 'fetch failed'}</Text>
-        </View>
-      ));
+
+  useEffect(() => {
+    console.log((height * 3) / 4);
+  }, []);
+  // useEffect(()=>{
+  //   console.log(querydata?.results.slice(0,2))
+  // },[querydata])
+  // const renderItems = isError
+  //   ? Array(10)
+  //       .fill(null)
+  //       .map((_, index) => (
+  //         <View key={index}>
+  //           <Text>fetch failed</Text>
+  //         </View>
+  //       ))
+  //   : (querydata?.results || Array(10).fill(null)).map((item, index) => (
+  //       <View key={index}>
+  //         <Text>{querydata ? 'thanks' : 'fetch failed'}</Text>
+  //       </View>
+  //     ));
 
   return (
-    <View style={tw('h-3/4 w-full')}>
+    <View style={[tw('w-full'), {height: (height * 3) / 4}]}>
       {isError ? (
         <>
           <Text>Error</Text>
@@ -67,7 +75,12 @@ export default function CarouselSlider() {
           showPagination
           data={querydata?.results.slice(0, 10)}
           renderItem={({item, index}: {item: IAnimeEntry; index: number}) => (
-            <CaroItem key={index} title={item.title} image={item.image} />
+            <CaroItem
+              key={index}
+              title={item.title}
+              releaseDate={item.releaseDate}
+              image={item.image}
+            />
           )}
         />
       )}
@@ -75,31 +88,46 @@ export default function CarouselSlider() {
   );
 }
 const CaroItem = React.memo(
-  ({title, image}: IAnimeEntry) => (
-    <View style={[tw('h-full p-3 relative rounded-lg'), {width}]}>
-      <Image source={{uri: image}} style={tw('w-full h-full rounded-lg')} />
-      <View style={tw('absolute ml-4 bottom-5 z-20 gap-1')}>
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={tw('font-bold text-2xl')}>
-          {title}
-        </Text>
-        <TouchableOpacity
-          style={tw(
-            'flex-row items-center gap-2 p-2 px-4 rounded-md bg-emerald-600 self-start',
-          )}>
-          <GoPlay size={18} fill={colors.neutral[900]} />
-          <Text style={tw('text-black text-sm font-bold')}>Play</Text>
-        </TouchableOpacity>
+  ({title, image, releaseDate}: IAnimeEntry) => {
+    // console.log(releaseDate)
+    return (
+      <View style={[tw('p-3 relative rounded-lg'), {width}]}>
+        <Image source={{uri: image}} style={tw('w-full h-full rounded-lg')} />
+        <View style={tw('absolute ml-4 bottom-5 z-20 gap-1')}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[tw('font-bold  text-2xl'), {}]}>
+            {title}
+          </Text>
+
+          <View style={tw('flex-row items-center gap-2')}>
+            <TouchableOpacity
+              style={tw(
+                'flex-row items-center gap-2 p-2 px-4 rounded-md bg-emerald-600 self-start',
+              )}>
+              <GoPlay size={18} fill={colors.neutral[900]} />
+              <Text style={tw('text-black text-sm font-bold')}>Play</Text>
+            </TouchableOpacity>
+            <Text
+              style={[
+                tw('font-semibold'),
+                {
+                  fontSize: 16,
+                },
+              ]}>
+              {releaseDate}
+            </Text>
+          </View>
+        </View>
+        <LinearGradient
+          colors={['transparent', 'black']}
+          angle={90}
+          style={tw('h-full w-full absolute z-10 m-3 rounded-lg')}
+        />
       </View>
-      <LinearGradient
-        colors={['transparent', 'black']}
-        angle={90}
-        style={tw('h-full w-full absolute z-10 m-3 rounded-lg')}
-      />
-    </View>
-  ),
+    );
+  },
   (prevProps, nextProps) =>
     prevProps.title === nextProps.title && prevProps.image === nextProps.image,
 );
@@ -200,7 +228,7 @@ const CustomPointer = ({
       }}>
       <Animated.View
         style={[
-          tw('h-4 w-4 bg-white rounded-md ml-2'),
+          tw('h-4 w-4 bg-white rounded-md '),
           {opacity: fadeAnim},
         ]}></Animated.View>
     </TouchableOpacity>
