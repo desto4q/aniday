@@ -41,7 +41,7 @@ export default function Info({route}: any) {
         <View style={tw('relative')}>
           <View
             style={[
-              tw('absolute w-full bg-red-200'),
+              tw('absolute w-full '),
               {
                 height: (height * 7) / 10,
               },
@@ -213,7 +213,7 @@ let EpisodePaginator = ({Episodes}: {Episodes?: IEpisode[]}) => {
       <View style={tw('flex-row gap-2 flex-wrap ')}>
         {paginatedData?.map(e => (
           <TouchableOpacity
-          key={e.id}
+            key={e.id}
             style={[
               tw(
                 'bg-slate-800 p-2  items-center justify-center border border-slate-600',

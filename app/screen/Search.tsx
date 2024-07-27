@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import React, {
   ReactEventHandler,
+  useCallback,
   useDeferredValue,
   useEffect,
   useState,
@@ -23,6 +24,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import Navigators from '../components/Navigators';
+import { ErrorComp } from '../components/Loading';
 
 export default function Search() {
   let [searchTerm, setSearchTerm] = useState<string>('naruto');
@@ -36,18 +38,23 @@ export default function Search() {
     data: searchResults,
     isFetching,
     isError,
+    refetch
   } = useQuery<IAnimeEntry>({
     queryKey: [finalTerm, pid],
     queryFn: async () => await queryAnime({query: finalTerm, pid: pid}),
+    _optimisticResults: 'optimistic',
   });
-
+  let configure = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, []);
   let handleDone = () => {
     setFinalTerm(searchTerm);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setPid(1);
+    configure();
   };
 
   useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    configure();
   }, [pid]);
 
   return (
@@ -85,7 +92,7 @@ export default function Search() {
       <View style={tw('px-4')}>
         <ScrollView contentContainerStyle={tw('pb-60')}>
           {isError ? (
-            <></>
+            <ErrorComp refetch={refetch}/>
           ) : isFetching ? (
             <Loading />
           ) : (

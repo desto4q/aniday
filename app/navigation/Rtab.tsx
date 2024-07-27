@@ -47,7 +47,7 @@ let CustomTab = (props: BottomTabBarProps) => {
   return (
     <View
       style={tw(
-        'bg-gray-950 h-15  absolute bottom-0 w-full flex-row justify-evenly',
+        'bg-slate-950 h-15  absolute bottom-0 w-full flex-row justify-evenly',
       )}>
       {/* <Text>{String(props.navigation.isFocused())}</Text> */}
       {routes.map((e, i) => {

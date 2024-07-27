@@ -4,21 +4,26 @@ import {useQuery} from '@tanstack/react-query';
 import {fetchRecentEpisodes} from '../api/api';
 import {colors, tw} from '../exports/exports';
 import {IAnimeEntry, IAnimePage} from '../exports/interface';
-import LinearGradient from 'react-native-linear-gradient';
-import {GoTag} from 'rn-icons/go';
 import DefaultCard from './DefaultCard';
+import {useNavigation} from '@react-navigation/native';
 
 export default function RecentReleases() {
   let {data: release} = useQuery<IAnimePage>({
     queryKey: ['recent', 'home'],
     queryFn: async () => await fetchRecentEpisodes({page: 1}),
   });
-  // useEffect(() => {
-  //   console.log(release,);
-  // }, [release]);
+
+  let navigate: any = useNavigation();
+  let navigateTO = () => {
+    navigate.navigate('Dscreen', {
+      type: 'recent',
+    });
+  };
   return (
     <View style={tw('px-4 gap-3')}>
-      <Text style={tw('text-xl')}>RecentReleases</Text>
+      <TouchableOpacity style={tw('p-1')} onPress={navigateTO}>
+        <Text style={tw('text-xl')}>RecentReleases</Text>
+      </TouchableOpacity>
 
       <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
         {release?.results.slice(0, 10).map(({image, id, title}) => {
