@@ -32,6 +32,7 @@
     "react-native-basic-carousel": "^1.1.2",
     "react-native-device-info": "^11.1.0",
     "react-native-easing-gradient": "^1.1.1",
+    "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.17.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-mmkv": "^2.12.2",

@@ -15,6 +15,8 @@ import {fetchPopular, fetchTop} from '../api/api';
 import {IAnimeEntry, IAnimePage} from '../exports/interface';
 import {GoDotFill, GoPlay} from 'rn-icons/go';
 import {LinearGradient} from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('screen').height;
 export default function CarouselSlider() {
@@ -26,26 +28,6 @@ export default function CarouselSlider() {
     queryKey: ['top', 'home'],
     queryFn: fetchTop.bind(null, {page: 1}),
   });
-
-  useEffect(() => {
-    console.log((height * 3) / 4);
-  }, []);
-  // useEffect(()=>{
-  //   console.log(querydata?.results.slice(0,2))
-  // },[querydata])
-  // const renderItems = isError
-  //   ? Array(10)
-  //       .fill(null)
-  //       .map((_, index) => (
-  //         <View key={index}>
-  //           <Text>fetch failed</Text>
-  //         </View>
-  //       ))
-  //   : (querydata?.results || Array(10).fill(null)).map((item, index) => (
-  //       <View key={index}>
-  //         <Text>{querydata ? 'thanks' : 'fetch failed'}</Text>
-  //       </View>
-  //     ));
 
   return (
     <View style={[tw('w-full'), {height: (height * 3) / 4}]}>
@@ -59,9 +41,9 @@ export default function CarouselSlider() {
         </>
       ) : (
         <SwiperFlatList
-          // autoplay
-          // autoplayDelay={2}
-          // autoplayLoop
+          autoplay
+          autoplayDelay={7}
+          autoplayLoop
           index={0}
           PaginationComponent={({scrollToIndex, size, paginationIndex}) => {
             return (
@@ -76,6 +58,7 @@ export default function CarouselSlider() {
           data={querydata?.results.slice(0, 10)}
           renderItem={({item, index}: {item: IAnimeEntry; index: number}) => (
             <CaroItem
+              id={item.id}
               key={index}
               title={item.title}
               releaseDate={item.releaseDate}
@@ -88,11 +71,14 @@ export default function CarouselSlider() {
   );
 }
 const CaroItem = React.memo(
-  ({title, image, releaseDate}: IAnimeEntry) => {
-    // console.log(releaseDate)
+  ({title, image, releaseDate, id}: IAnimeEntry) => {
+    let navigation = useNavigation<any>();
     return (
       <View style={[tw('p-3 relative rounded-lg'), {width}]}>
-        <Image source={{uri: image}} style={tw('w-full h-full rounded-lg')} />
+        <FastImage
+          source={{uri: image}}
+          style={tw('w-full h-full rounded-lg')}
+        />
         <View style={tw('absolute ml-4 bottom-5 z-20 gap-1')}>
           <Text
             numberOfLines={1}
@@ -103,6 +89,11 @@ const CaroItem = React.memo(
 
           <View style={tw('flex-row items-center gap-2')}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Info', {
+                  id: id,
+                });
+              }}
               style={tw(
                 'flex-row items-center gap-2 p-2 px-4 rounded-md bg-emerald-600 self-start',
               )}>
@@ -133,9 +124,9 @@ const CaroItem = React.memo(
 );
 
 let MyPaginator = ({size, scrollToIndex, paginationIndex}: PaginationProps) => {
-  useEffect(() => {
-    console.log(paginationIndex, 1);
-  }, [paginationIndex]);
+  // useEffect(() => {
+  //   // console.log(paginationIndex, 1);
+  // }, [paginationIndex]);
 
   let temp = useMemo(() => {
     return Array.from({length: size});

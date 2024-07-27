@@ -13,7 +13,7 @@ export default function Home() {
     <SafeAreaView style={tw('')}>
       <ScrollView
         style={tw(' h-full')}
-        contentContainerStyle={tw('gap-4 pb-20')}>
+        contentContainerStyle={tw('gap-3 pb-20')}>
         <View style={tw('h-14  flex-row items-center px-4')}>
           <Text style={tw('text-xl')}>AniPlay</Text>
           <TouchableOpacity style={tw('ml-auto p-2')}>

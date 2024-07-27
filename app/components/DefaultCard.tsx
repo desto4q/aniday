@@ -4,6 +4,7 @@ import {colors, tw} from '../exports/exports';
 import {GoTag} from 'rn-icons/go';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 let DefaultCard = ({image, title, id}: IAnimeEntry) => {
   let navigation: any = useNavigation();
@@ -23,7 +24,7 @@ let DefaultCard = ({image, title, id}: IAnimeEntry) => {
           width: 240 * (4 / 6),
         },
       ]}>
-      <Image
+      <FastImage
         source={{uri: image}}
         style={[tw('h-60 w-full rounded-md'), {aspectRatio: 4 / 6}]}
       />

@@ -12,27 +12,30 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import Home from '../screen/Home';
-import Test from '../screen/Test';
 import {colors, tw} from '../exports/exports';
 
 import {GoFileDirectory, GoHeart, GoHome, GoSearch} from 'rn-icons/go';
 import Gallery from '../screen/Gallery';
 import User from '../screen/User';
+import Search from '../screen/Search';
+import {enableScreens} from 'react-native-screens';
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 }
+enableScreens();
 export default function Rtab() {
   let Tabs = createBottomTabNavigator();
   return (
     <Tabs.Navigator
       screenOptions={{
         headerShown: false,
+        // freezeOnBlur: false,
       }}
       tabBar={props => <CustomTab {...props} />}>
       <Tabs.Screen name="Home" component={Home} />
-      <Tabs.Screen name="Search" component={Test} />
+      <Tabs.Screen name="Search" component={Search} />
       <Tabs.Screen name="Gallery" component={Gallery} />
       <Tabs.Screen name="User" component={User} />
     </Tabs.Navigator>
@@ -87,8 +90,8 @@ let TabPill = ({
 }) => {
   let [isFocused, setISFocused] = useState(focused);
   let setter = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setISFocused(focused);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
   useEffect(() => {
     setter();
@@ -102,12 +105,10 @@ let TabPill = ({
       <View
         style={[
           tw(
-            'self-center items-center bg-opacity-20 flex-row gap-2  p-2 px-3',
-            focused ? 'bg-yellow-500' : '',
+            `self-center items-center  bg-opacity-20 flex-row gap-2   p-2 px-3 rounded-md ${
+              focused ? 'bg-yellow-300' : 'bg-transparent'
+            }`,
           ),
-          {
-            borderRadius: 8,
-          },
         ]}>
         {Icons[index](isFocused ? colors.yellow[300] : colors.neutral[700])}
 

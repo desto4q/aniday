@@ -73,7 +73,7 @@ const queryAnime = async ({
 const fetchPopular = async ({page}: IApiProps) => {
   try {
     const response = await axios.get(
-      `https://dezz-consument.vercel.app/anime/zoro/most-popular?page=${
+      `https://dezz-consument.vercel.app/anime/gogoanime/popular?page=${
         page ? page : 1
       }`,
     );
@@ -86,6 +86,18 @@ const fetchFavorites = async ({page}: IApiProps) => {
   try {
     const response = await axios.get(
       `https://dezz-consument.vercel.app/anime/zoro/most-favorite?page=${
+        page ? page : 1
+      }`,
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+const fetchMovies = async ({page}: IApiProps) => {
+  try {
+    const response = await axios.get(
+      `https://dezz-consument.vercel.app/anime/gogoanime/movies?page=${
         page ? page : 1
       }`,
     );
@@ -127,4 +139,5 @@ export {
   queryAnime,
   fetchPopular,
   fetchFavorites,
+  fetchMovies,
 };

@@ -12,11 +12,11 @@ export default function TopAiring() {
     queryFn: async () => await fetchPopular({page: 1}),
   });
   return (
-    <View style={tw('px-4 gap-4')}>
+    <View style={tw('px-4 gap-3')}>
       <Text style={tw('text-xl')}>Popular</Text>
 
-      <ScrollView horizontal contentContainerStyle={tw('gap-2 py-4')}>
-        {release?.results.map(({image, id, title}) => {
+      <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
+        {release?.results.slice(0, 10).map(({image, id, title}) => {
           return (
             <DefaultCard
               image={image}

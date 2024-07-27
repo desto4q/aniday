@@ -1,5 +1,5 @@
 import {View, Text, ScrollView, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {fetchRecentEpisodes} from '../api/api';
 import {colors, tw} from '../exports/exports';
@@ -13,12 +13,15 @@ export default function RecentReleases() {
     queryKey: ['recent', 'home'],
     queryFn: async () => await fetchRecentEpisodes({page: 1}),
   });
+  // useEffect(() => {
+  //   console.log(release,);
+  // }, [release]);
   return (
-    <View style={tw('px-4 gap-4')}>
+    <View style={tw('px-4 gap-3')}>
       <Text style={tw('text-xl')}>RecentReleases</Text>
 
-      <ScrollView horizontal contentContainerStyle={tw('gap-2 py-4')}>
-        {release?.results.map(({image, id, title}) => {
+      <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
+        {release?.results.slice(0, 10).map(({image, id, title}) => {
           return (
             <DefaultCard
               image={image}
