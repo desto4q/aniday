@@ -24,7 +24,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import Navigators from '../components/Navigators';
-import { ErrorComp } from '../components/Loading';
+import {ErrorComp} from '../components/Loading';
 
 export default function Search() {
   let [searchTerm, setSearchTerm] = useState<string>('naruto');
@@ -38,7 +38,7 @@ export default function Search() {
     data: searchResults,
     isFetching,
     isError,
-    refetch
+    refetch,
   } = useQuery<IAnimeEntry>({
     queryKey: [finalTerm, pid],
     queryFn: async () => await queryAnime({query: finalTerm, pid: pid}),
@@ -59,7 +59,7 @@ export default function Search() {
 
   return (
     <SafeAreaView style={tw('gap-2')}>
-      <View style={tw('mx-4 h-14 flex-row bg-slate-700 rounded-md')}>
+      <View style={tw('mx-4 h-14 mt-1 flex-row bg-slate-700 rounded-md')}>
         <TouchableOpacity
           style={[
             tw(' items-center px-3 justify-center rounded-r-md'),
@@ -92,7 +92,7 @@ export default function Search() {
       <View style={tw('px-4')}>
         <ScrollView contentContainerStyle={tw('pb-60')}>
           {isError ? (
-            <ErrorComp refetch={refetch}/>
+            <ErrorComp refetch={refetch} />
           ) : isFetching ? (
             <Loading />
           ) : (

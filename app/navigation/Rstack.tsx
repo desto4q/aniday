@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Rtab from './Rtab';
 import Info from '../screen/Info';
 import DScreen from '../screen/DScreen';
+import WatchScreen from '../screen/WatchScreen';
 
 export default function Rstack() {
   let Stack = createNativeStackNavigator();
@@ -17,6 +18,7 @@ export default function Rstack() {
       }}>
       <Stack.Screen name="Tabs" component={Rtab} />
       <Stack.Screen name="Info" component={Info} />
+      <Stack.Screen name="Watch" component={WatchScreen} />
       <Stack.Screen
         name="Dscreen"
         component={DScreen}

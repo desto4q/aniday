@@ -18,6 +18,7 @@ import {GoDotFill} from 'rn-icons/go';
 import {FaCaretDown, FaCaretLeft, FaCaretRight, FaCaretUp} from 'rn-icons/fa';
 
 import {IAnimeInfo, IEpisode} from '../exports/interface';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Info({route}: any) {
   const {id} = route.params;
@@ -113,7 +114,7 @@ export default function Info({route}: any) {
                   </View>
                   <View style={tw('mt-3 gap-3')}>
                     <Text style={tw('font-bold text-lg')}>Episode:</Text>
-                    <EpisodePaginator Episodes={info?.episodes} />
+                    <EpisodePaginator Episodes={info?.episodes}  AnimeId={id}/>
                   </View>
                 </>
               )}
@@ -183,13 +184,24 @@ let DescBox = ({item}: {item: string}) => {
     </View>
   );
 };
-let EpisodePaginator = ({Episodes}: {Episodes?: IEpisode[]}) => {
+let EpisodePaginator = ({Episodes,AnimeId}: {Episodes?: IEpisode[],AnimeId:string}) => {
   let [page, setPage] = useState<number>(1);
   const pageSize = 50;
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const reversedEpisodes = [...(Episodes || [])].reverse();
   const paginatedData = reversedEpisodes.slice(startIndex, endIndex);
+
+  let navigation: any = useNavigation();
+  let myNav = useMemo(
+    () => (episodeId: string, AnimeId: string) => {
+      navigation.navigate('Watch', {
+        episodeId: episodeId,
+        AnimeId: AnimeId,
+      });
+    },
+    [],
+  );
 
   let nextPage = () => {
     if (page < Math.ceil((Episodes?.length || 0) / pageSize)) {
@@ -213,6 +225,9 @@ let EpisodePaginator = ({Episodes}: {Episodes?: IEpisode[]}) => {
       <View style={tw('flex-row gap-2 flex-wrap ')}>
         {paginatedData?.map(e => (
           <TouchableOpacity
+          onPress={()=>{
+            myNav(e.id,AnimeId)
+          }}
             key={e.id}
             style={[
               tw(

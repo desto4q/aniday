@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, StatusBar} from 'react-native';
 import React from 'react';
 import Main from './app/Main';
 import {DarkTheme, NavigationContainer} from '@react-navigation/native';
@@ -13,8 +13,11 @@ const myTheme = {
 };
 export default function App() {
   return (
-    <NavigationContainer theme={myTheme}>
-      <Main />
-    </NavigationContainer>
+    <>
+      <StatusBar backgroundColor={colors.slate[900]} />
+      <NavigationContainer theme={myTheme}>
+        <Main />
+      </NavigationContainer>
+    </>
   );
 }
