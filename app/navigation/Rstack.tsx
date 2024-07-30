@@ -5,6 +5,7 @@ import Rtab from './Rtab';
 import Info from '../screen/Info';
 import DScreen from '../screen/DScreen';
 import WatchScreen from '../screen/WatchScreen';
+import GenreId from '../screen/GenreId';
 
 export default function Rstack() {
   let Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ export default function Rstack() {
           type: 'Movies',
         }}
       />
+      <Stack.Screen name="GenreId" component={GenreId} />
     </Stack.Navigator>
   );
 }

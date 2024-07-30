@@ -6,6 +6,7 @@ import {colors, tw} from '../exports/exports';
 import {IAnimeEntry, IAnimePage} from '../exports/interface';
 import DefaultCard from './DefaultCard';
 import {useNavigation} from '@react-navigation/native';
+import DTitle from './DTitle';
 
 export default function RecentReleases() {
   let {data: release} = useQuery<IAnimePage>({
@@ -21,9 +22,7 @@ export default function RecentReleases() {
   };
   return (
     <View style={tw('px-4 gap-3')}>
-      <TouchableOpacity style={tw('p-1')} onPress={navigateTO}>
-        <Text style={tw('text-xl')}>RecentReleases</Text>
-      </TouchableOpacity>
+      <DTitle title="RecentReleases" navigateTO={navigateTO} />
 
       <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
         {release?.results.slice(0, 10).map(({image, id, title}) => {

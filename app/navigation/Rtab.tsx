@@ -14,11 +14,17 @@ import {
 import Home from '../screen/Home';
 import {colors, tw} from '../exports/exports';
 
-import {GoFileDirectory, GoHeart, GoHome, GoSearch} from 'rn-icons/go';
-import Gallery from '../screen/Gallery';
+import {
+  GoFileDirectory,
+  GoHeart,
+  GoHome,
+  GoListUnordered,
+  GoSearch,
+} from 'rn-icons/go';
 import User from '../screen/User';
 import Search from '../screen/Search';
 import {enableScreens} from 'react-native-screens';
+import Genre from '../screen/Genre';
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -36,7 +42,7 @@ export default function Rtab() {
       tabBar={props => <CustomTab {...props} />}>
       <Tabs.Screen name="Home" component={Home} />
       <Tabs.Screen name="Search" component={Search} />
-      <Tabs.Screen name="Gallery" component={Gallery} />
+      <Tabs.Screen name="Genre" component={Genre} />
       <Tabs.Screen name="User" component={User} />
     </Tabs.Navigator>
   );
@@ -73,7 +79,7 @@ let icon_size = 22;
 let Icons = [
   (color: string) => <GoHome size={icon_size} fill={color} />,
   (color: string) => <GoSearch size={icon_size} fill={color} />,
-  (color: string) => <GoHeart size={icon_size} fill={color} />,
+  (color: string) => <GoListUnordered size={icon_size} fill={color} />,
   (color: string) => <GoFileDirectory size={icon_size} fill={color} />,
 ];
 

@@ -6,6 +6,7 @@ import {fetchPopular, fetchTop} from '../api/api';
 import {tw} from '../exports/exports';
 import DefaultCard from './DefaultCard';
 import {useNavigation} from '@react-navigation/native';
+import DTitle from './DTitle';
 
 export default function TopAiring() {
   let {data: release} = useQuery<IAnimePage>({
@@ -20,9 +21,8 @@ export default function TopAiring() {
   };
   return (
     <View style={tw('px-4 gap-3')}>
-      <TouchableOpacity onPress={navigateTO}>
-        <Text style={tw('text-xl')}>Popular</Text>
-      </TouchableOpacity>
+      <DTitle title="Popular" navigateTO={navigateTO} />
+
       <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
         {release?.results.slice(0, 10).map(({image, id, title}) => {
           return (

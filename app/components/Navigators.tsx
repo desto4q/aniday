@@ -1,6 +1,7 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {FaCaretLeft, FaCaretRight} from 'rn-icons/fa';
 import {tw} from '../exports/exports';
+import {useState} from 'react';
 
 let Navigators = ({
   pid,
@@ -11,6 +12,7 @@ let Navigators = ({
   setPid: (e: number) => any;
   nextPage?: boolean;
 }) => {
+  // let [temp, setTemp] = useState<number>();
   let goFoward = () => {
     if (nextPage) {
       setPid((pid += 1));
@@ -25,7 +27,7 @@ let Navigators = ({
     }
   };
   return (
-    <View style={tw('flex-row mt-4 self-center gap-4 items-center')}>
+    <View style={tw('flex-row  self-center gap-4 items-center')}>
       <TouchableOpacity
         onPress={goBack}
         style={tw(
@@ -33,7 +35,23 @@ let Navigators = ({
         )}>
         <FaCaretLeft size={22} />
       </TouchableOpacity>
-      <Text style={tw('text-2xl')}>{pid}</Text>
+      {/* <TextInput  value=''>
+
+      </TextInput>
+       */}
+
+      <TextInput
+        style={tw('bg-slate-600 rounded-md px-2 text-center')}
+        defaultValue={String(pid)}
+        keyboardType="numeric"
+        onTextInput={e => {
+          let text = e.nativeEvent.text;
+        }}
+        onSubmitEditing={e => {
+          let text = e.nativeEvent.text;
+          let digit = Number(text);
+          setPid(digit);
+        }}></TextInput>
       <TouchableOpacity
         disabled={!nextPage}
         onPress={goFoward}

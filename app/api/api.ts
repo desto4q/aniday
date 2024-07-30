@@ -117,10 +117,10 @@ const fetchgenreList = async () => {
     throw err;
   }
 };
-const fetchGenre = async ({page}: IApiProps) => {
+const fetchGenre = async ({page, id}: IApiProps) => {
   try {
     const response = await axios.get(
-      `https://dezz-consument.vercel.app/anime/gogoanime/genre/Action?page=${
+      `https://dezz-consument.vercel.app/anime/gogoanime/genre/${id}?page=${
         page ? page : 1
       }`,
     );

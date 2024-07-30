@@ -12,6 +12,7 @@ import {IAnimePage} from '../exports/interface';
 import {tw} from '../exports/exports';
 import DefaultCard from './DefaultCard';
 import {useNavigation} from '@react-navigation/native';
+import DTitle from './DTitle';
 
 export default function Favorites() {
   let {data: favorites} = useQuery<IAnimePage>({
@@ -29,9 +30,7 @@ export default function Favorites() {
   // }, []);
   return (
     <View style={tw('px-4 gap-3')}>
-      <TouchableOpacity onPress={navigateTO}>
-        <Text style={tw('text-xl')}>Movies</Text>
-      </TouchableOpacity>
+      <DTitle title="Movies" navigateTO={navigateTO} />
 
       <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
         {favorites?.results.slice(0, 10).map(({image, id, title}) => {

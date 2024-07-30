@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   LayoutAnimation,
+  TextInput,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
@@ -15,6 +16,7 @@ import {FaCaretLeft, FaCaretRight} from 'rn-icons/fa';
 import {IAnimePage} from '../exports/interface';
 import DefaultCard from '../components/DefaultCard';
 import {ErrorComp, Loading} from '../components/Loading';
+import GoBack from '../components/GoBack';
 
 interface QueryFns {
   recent: (pid: number) => Promise<any>;
@@ -54,12 +56,9 @@ export default function DScreen({route}: any) {
   }, []);
   return (
     <SafeAreaView>
-      <View style={tw('px-3')}>
+      <View style={tw('px-3 gap-2')}>
         <View style={tw('h-14  gap-3 flex-row items-center')}>
-          <TouchableOpacity
-            style={tw(' h-full justify-center items-center px-1')}>
-            <FaCaretLeft size={22} fill={colors.yellow[500]} />
-          </TouchableOpacity>
+          <GoBack />
           <Text style={tw('text-xl capitalize')}>{type}</Text>
           <View style={tw('h-full ml-auto items-center justify-center')}>
             <DNavigator
@@ -71,7 +70,9 @@ export default function DScreen({route}: any) {
           </View>
         </View>
         <ScrollView
-          contentContainerStyle={tw('pb-40 flex-row gap-2 flex-wrap')}>
+          contentContainerStyle={tw(
+            'pb-40 flex-row gap-2 flex-wrap justify-center',
+          )}>
           {isError ? (
             <ErrorComp refetch={refetch}></ErrorComp>
           ) : isLoading ? (
@@ -129,7 +130,18 @@ let DNavigator = ({
         )}>
         <FaCaretLeft size={22} />
       </TouchableOpacity>
-      <Text style={tw('text-2xl')}>{pid}</Text>
+      <TextInput
+        style={tw('bg-slate-600 rounded-md px-2 text-center')}
+        defaultValue={String(pid)}
+        keyboardType="numeric"
+        onTextInput={e => {
+          let text = e.nativeEvent.text;
+        }}
+        onSubmitEditing={e => {
+          let text = e.nativeEvent.text;
+          let digit = Number(text);
+          setPid(digit);
+        }}></TextInput>
       <TouchableOpacity
         disabled={!nextPage}
         onPress={goFoward}
