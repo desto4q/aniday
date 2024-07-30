@@ -32,7 +32,10 @@ export default function Favorites() {
     <View style={tw('px-4 gap-3')}>
       <DTitle title="Movies" navigateTO={navigateTO} />
 
-      <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
+      <ScrollView
+        horizontal
+        contentContainerStyle={tw('gap-2  ')}
+        style={tw('pb-3')}>
         {favorites?.results.slice(0, 10).map(({image, id, title}) => {
           return (
             <DefaultCard

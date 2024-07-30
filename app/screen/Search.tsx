@@ -15,8 +15,8 @@ import React, {
   useState,
 } from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, tw} from '../exports/exports';
-import {GoSearch, GoTag} from 'rn-icons/go';
+import {addtoFav, checker, colors, tw} from '../exports/exports';
+import {GoCheckCircleFill, GoSearch, GoTag} from 'rn-icons/go';
 import {FaCaretLeft} from 'rn-icons/fa';
 import {useQuery} from '@tanstack/react-query';
 import {queryAnime} from '../api/api';
@@ -136,10 +136,24 @@ interface ISearchResults {
 
 let SearchCard = ({id, title, image}: ISearchResults) => {
   let navigation: any = useNavigation();
+  let [isFav, setIsFav] = useState(checker(String(id)));
+  let item = {
+    image,
+    title,
+    id,
+  };
   let changeScreen = () => {
     navigation.navigate('Info', {
       id: id,
     });
+  };
+
+  let handleAddToFav = () => {
+    addtoFav({
+      id: String(id),
+      item: item,
+    });
+    setIsFav(checker(String(id))); // Update the favorite status
   };
 
   return (
@@ -159,10 +173,11 @@ let SearchCard = ({id, title, image}: ISearchResults) => {
       />
       <Text numberOfLines={2}>{title}</Text>
       <TouchableOpacity
+        onPress={handleAddToFav}
         style={tw(
           'absolute z-20 top-0 bg-yellow-600 p-2 right-0 m-1 rounded-sm',
         )}>
-        <GoTag />
+        {!isFav ? <GoTag /> : <GoCheckCircleFill />}
       </TouchableOpacity>
       <LinearGradient
         colors={[`${colors.neutral[900]}b3`, 'rgba(0,0,0,0)']}

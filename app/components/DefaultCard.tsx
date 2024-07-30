@@ -1,25 +1,40 @@
+import React, {useState, useEffect} from 'react';
 import {Image, Text, TouchableOpacity} from 'react-native';
 import {IAnimeEntry} from '../exports/interface';
-import {colors, tw} from '../exports/exports';
-import {GoTag} from 'rn-icons/go';
+import {addtoFav, checker, colors, tw} from '../exports/exports';
+import {GoCheckCircleFill, GoTag} from 'rn-icons/go';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 let DefaultCard = ({image, title, id}: IAnimeEntry) => {
+  let item = {
+    image,
+    title,
+    id,
+  };
   let navigation: any = useNavigation();
+  let [isFav, setIsFav] = useState(checker(String(id)));
+
   let changeScreen = () => {
     navigation.navigate('Info', {
       id: id,
     });
   };
+
+  let handleAddToFav = () => {
+    addtoFav({
+      id: String(id),
+      item: item,
+    });
+    setIsFav(checker(String(id))); // Update the favorite status
+  };
+
   return (
     <TouchableOpacity
-      onPress={() => {
-        changeScreen();
-      }}
+      onPress={changeScreen}
       style={[
-        tw('   rounded-md gap-1 relative'),
+        tw('rounded-md gap-1 relative'),
         {
           width: 240 * (4 / 6),
         },
@@ -30,15 +45,17 @@ let DefaultCard = ({image, title, id}: IAnimeEntry) => {
       />
       <Text numberOfLines={2}>{title}</Text>
       <TouchableOpacity
+        onPress={handleAddToFav}
         style={tw(
           'absolute z-20 top-0 bg-yellow-600 p-2 right-0 m-1 rounded-sm',
         )}>
-        <GoTag />
+        {!isFav ? <GoTag /> : <GoCheckCircleFill />}
       </TouchableOpacity>
       <LinearGradient
         colors={[`${colors.neutral[900]}b3`, 'rgba(0,0,0,0)']}
         renderToHardwareTextureAndroid
-        style={tw('h-60 w-full absolute')}></LinearGradient>
+        style={tw('h-60 w-full absolute')}
+      />
     </TouchableOpacity>
   );
 };

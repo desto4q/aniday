@@ -24,7 +24,10 @@ export default function RecentReleases() {
     <View style={tw('px-4 gap-3')}>
       <DTitle title="RecentReleases" navigateTO={navigateTO} />
 
-      <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
+      <ScrollView
+        style={tw('pb-3')}
+        horizontal
+        contentContainerStyle={tw('gap-2 ')}>
         {release?.results.slice(0, 10).map(({image, id, title}) => {
           return (
             <DefaultCard
