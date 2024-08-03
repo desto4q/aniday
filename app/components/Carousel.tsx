@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   Animated,
   Easing,
+  LayoutAnimation,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {colors, tw} from '../exports/exports';
 import {PaginationProps, SwiperFlatList} from 'react-native-swiper-flatlist';
 import {useQuery} from '@tanstack/react-query';
@@ -17,8 +18,12 @@ import {GoDotFill, GoPlay} from 'rn-icons/go';
 import {LinearGradient} from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {getPalette, type ImageColorsResult} from 'react-native-palette-picker';
+
+// import {getColors} from 'react-native-image-colors';
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('screen').height;
+
 export default function CarouselSlider() {
   const {
     data: querydata,
@@ -28,9 +33,21 @@ export default function CarouselSlider() {
     queryKey: ['top', 'home'],
     queryFn: fetchTop.bind(null, {page: 1}),
   });
-
+  let [bg, setbg] = useState(colors.slate[600]);
+  let [activeIndex, setActiveIndex] = useState(0);
+  let configure = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, []);
+  useEffect(() => {
+    configure();
+  }, [bg]);
   return (
-    <View style={[tw('w-full'), {height: (height * 3) / 4}]}>
+    <View style={[tw('w-full relative'), {height: (height * 3) / 4}]}>
+      <LinearGradient
+        colors={[bg, 'rgba(0,0,0,0)']}
+        start={{x: 0, y: 0}}
+        style={tw('h-full w-full absolute  ')}
+      />
       {isError ? (
         <>
           <Text>Error</Text>
@@ -41,10 +58,15 @@ export default function CarouselSlider() {
         </>
       ) : (
         <SwiperFlatList
-          autoplay
-          autoplayDelay={7}
-          autoplayLoop
-          index={0}
+          // autoplay
+          // autoplayDelay={7}
+          // autoplayLoop
+          index={activeIndex}
+          onChangeIndex={({index}) => {
+            setActiveIndex(prev => index);
+            // console.log('active', activeIndex);
+            // console.log(index)
+          }}
           PaginationComponent={({scrollToIndex, size, paginationIndex}) => {
             return (
               <MyPaginator
@@ -58,6 +80,9 @@ export default function CarouselSlider() {
           data={querydata?.results.slice(0, 10)}
           renderItem={({item, index}: {item: IAnimeEntry; index: number}) => (
             <CaroItem
+              setNewBg={setbg}
+              activeIndex={activeIndex}
+              index={index}
               id={item.id}
               key={index}
               title={item.title}
@@ -70,58 +95,105 @@ export default function CarouselSlider() {
     </View>
   );
 }
-const CaroItem = React.memo(
-  ({title, image, releaseDate, id}: IAnimeEntry) => {
-    let navigation = useNavigation<any>();
-    return (
-      <View style={[tw('p-3 relative rounded-lg'), {width}]}>
-        <FastImage
-          source={{uri: image}}
-          style={tw('w-full h-full rounded-lg')}
-        />
-        <View style={tw('absolute ml-4 bottom-5 z-20 gap-1')}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={[tw('font-bold  text-2xl'), {}]}>
-            {title}
-          </Text>
 
-          <View style={tw('flex-row items-center gap-2')}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Info', {
-                  id: id,
-                });
-              }}
-              style={tw(
-                'flex-row items-center gap-2 p-2 px-4 rounded-md bg-emerald-600 self-start',
-              )}>
-              <GoPlay size={18} fill={colors.neutral[900]} />
-              <Text style={tw('text-black text-sm font-bold')}>Play</Text>
-            </TouchableOpacity>
-            <Text
-              style={[
-                tw('font-semibold'),
-                {
-                  fontSize: 16,
-                },
-              ]}>
-              {releaseDate}
-            </Text>
-          </View>
+
+
+
+
+
+
+
+
+interface ICaroItem extends IAnimeEntry {
+  activeIndex: number;
+  index: number;
+  setNewBg: (bg: string) => any;
+}
+const CaroItem = ({
+  title,
+  image,
+  releaseDate,
+  id,
+  activeIndex,
+  index,
+  setNewBg,
+}: ICaroItem) => {
+  let navigation = useNavigation<any>();
+  let [caroBg, setBg] = useState('rgba(0,0,0,0)');
+
+  let checker = () => {
+    if (activeIndex == index) {
+      console.log(caroBg);
+
+      if (caroBg != 'rgba(0,0,0,0)') {
+        setNewBg(caroBg);
+      } else {
+        setNewBg(colors.slate[600]);
+      }
+    }
+    return;
+  };
+  let fetchColor = async (url: string) => {
+    try {
+      await getPalette(url).then(res => {
+        setBg(res.dominant);
+      });
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
+  };
+  useEffect(() => {
+    checker();
+  }, [activeIndex]);
+
+  useEffect(() => {
+    fetchColor(String(image));
+  }, []);
+  return (
+    <View style={[tw('p-3 relative rounded-lg'), {width}]}>
+      <FastImage source={{uri: image}} style={tw('w-full h-full rounded-lg')} />
+      <View style={tw('absolute ml-4 bottom-5 z-20 gap-1')}>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[tw('font-bold  text-2xl'), {}]}>
+          {title}
+        </Text>
+
+        <View style={tw('flex-row items-center gap-2')}>
+          <TouchableOpacity
+            onPress={() => {
+              // navigation.navigate('Info', {
+              //   id: id,
+              // });
+              console.log(activeIndex, index);
+            }}
+            style={tw(
+              'flex-row items-center gap-2 p-2 px-4 rounded-md bg-emerald-600 self-start',
+            )}>
+            <GoPlay size={18} fill={colors.neutral[900]} />
+            <Text style={tw('text-black text-sm font-bold')}>Play</Text>
+          </TouchableOpacity>
+          <Text
+            style={[
+              tw('font-semibold'),
+              {
+                fontSize: 16,
+              },
+            ]}>
+            {releaseDate}
+          </Text>
         </View>
-        <LinearGradient
-          colors={['transparent', 'black']}
-          angle={90}
-          style={tw('h-full w-full absolute z-10 m-3 rounded-lg')}
-        />
       </View>
-    );
-  },
-  (prevProps, nextProps) =>
-    prevProps.title === nextProps.title && prevProps.image === nextProps.image,
-);
+      <LinearGradient
+        colors={['transparent', 'black']}
+        angle={90}
+        style={tw('h-full w-full absolute z-10 m-3 rounded-lg')}
+      />
+    </View>
+  );
+};
 
 let MyPaginator = ({size, scrollToIndex, paginationIndex}: PaginationProps) => {
   // useEffect(() => {

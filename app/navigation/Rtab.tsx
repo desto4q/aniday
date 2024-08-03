@@ -6,7 +6,7 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
@@ -95,9 +95,14 @@ let TabPill = ({
   index: number;
 }) => {
   let [isFocused, setISFocused] = useState(focused);
+
+  let configure = useCallback(
+    () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut),
+    [],
+  );
   let setter = () => {
     setISFocused(focused);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    configure();
   };
   useEffect(() => {
     setter();

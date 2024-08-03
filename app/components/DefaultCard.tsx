@@ -1,7 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {Image, Text, TouchableOpacity} from 'react-native';
 import {IAnimeEntry} from '../exports/interface';
-import {addtoFav, checker, colors, tw} from '../exports/exports';
+import {
+  addtoFav,
+  checker,
+  colors,
+  deleteItem,
+  fav,
+  tw,
+} from '../exports/exports';
 import {GoCheckCircleFill, GoTag} from 'rn-icons/go';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
@@ -23,11 +30,26 @@ let DefaultCard = ({image, title, id}: IAnimeEntry) => {
   };
 
   let handleAddToFav = () => {
-    addtoFav({
-      id: String(id),
-      item: item,
-    });
-    setIsFav(checker(String(id))); // Update the favorite status
+    if (checker(String(id))) {
+      deleteItem(String(id), setIsFav);
+    } else {
+      addtoFav({
+        id: String(id),
+        item: item,
+      });
+      setIsFav(true);
+    }
+    // if (checker(String(id))) {
+    //   deleteItem(String(id));
+    //   console.log(checker(String(id)));
+    //   // setIsFav(checker(String(id)));
+    //   return;
+    // }
+    // addtoFav({
+    //   id: String(id),
+    //   item: item,
+    // });
+    // setIsFav(checker(String(id))); // Update the favorite status
   };
 
   return (
