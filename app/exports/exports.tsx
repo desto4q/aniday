@@ -3,7 +3,7 @@ import {tailwind as colors} from 'easycolors';
 
 import {MMKV} from 'react-native-mmkv';
 import {Alert, Modal, TouchableOpacity} from 'react-native';
-
+import {DocumentDirectoryPath, downloadFile} from '@dr.pogodin/react-native-fs';
 let fav = new MMKV({id: 'favs'});
 
 let checker = (id: string) => {
@@ -36,6 +36,11 @@ let deleteSaved = (id: string, refresh: () => any) => {
     },
   ]);
 };
+interface IdownloadItem {
+  filePath: string;
+  url: string;
+}
+
 let deleteItem = (id: string, set: (item: boolean) => any) => {
   Alert.alert('Are you sure you want to delete ', id, [
     {
@@ -53,4 +58,42 @@ let deleteItem = (id: string, set: (item: boolean) => any) => {
     },
   ]);
 };
-export {tw, colors, fav, checker, addtoFav, deleteItem, deleteSaved};
+
+let keyGetter = () => {
+  let allKeys = fav.getAllKeys();
+  return allKeys;
+};
+let clearer = (keys: string[]) => {
+  for (let i of keys) {
+  }
+};
+let deleAll = async (setter?: (item: any) => any) => {
+  Alert.alert('are you sure you want to delete all', '', [
+    {
+      text: 'yes',
+      onPress: () => {
+        fav.clearAll();
+        if (setter) {
+          setter([]);
+        }
+      },
+    },
+    {
+      text: 'no',
+      onPress: () => null,
+    },
+  ]);
+};
+let fall = require('../../assets/images/offline.jpg');
+
+export {
+  tw,
+  colors,
+  fav,
+  checker,
+  addtoFav,
+  deleteItem,
+  deleteSaved,
+  fall,
+  deleAll,
+};

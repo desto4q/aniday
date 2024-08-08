@@ -18,7 +18,7 @@ let checker = () => {
 };
 
 const requestPermissions = async () => {
-  console.log("yes")
+  console.log('yes');
   try {
     const result = await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
     if (result === RESULTS.GRANTED) {

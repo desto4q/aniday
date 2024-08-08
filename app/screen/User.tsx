@@ -11,27 +11,20 @@ import {
   addtoFav,
   checker,
   colors,
+  deleAll,
   deleteSaved,
+  fall,
   fav,
   tw,
 } from '../exports/exports';
 import FastImage from 'react-native-fast-image';
-import {Image} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
 import {GoCheckCircleFill, GoTag} from 'rn-icons/go';
 import {FiRefreshCcw} from 'rn-icons/fi';
 const url =
   'https://images.pexels.com/photos/2911521/pexels-photo-2911521.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
 
-let fetchColor = async (url: string) => {
-  await getPalette(url).then(res => {
-    console.log(res);
-  });
-};
-
-import {useNavigation} from '@react-navigation/native';
-import {getPalette} from 'react-native-palette-picker';
-
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 interface IFavType {
   image: string;
   id: string;
@@ -63,16 +56,26 @@ export default function User() {
     handleRefresh();
   }, []);
   let [favItems, setFavItems] = useState<IFavType[]>(getAll_items());
+  useFocusEffect(
+    useCallback(() => {
+      setFavItems(getAll_items());
+      return () => {
+        // Cleanup actions if needed
+      };
+    }, []),
+  );
+
+  let handle_delete = () => {};
   return (
     <SafeAreaView style={tw('gap-2')}>
       <View style={tw('flex-row items-center gap-2 px-3 h-12')}>
         <Text>Saved</Text>
         <TouchableOpacity
-          onPress={() => {
-            fetchColor(url);
+          onPress={async () => {
+            deleAll(setFavItems);
           }}
           style={tw('p-1 px-3 bg-red-700 rounded-md mx-auto ')}>
-          <Text>fetch image</Text>
+          <Text>delete all</Text>
         </TouchableOpacity>
         <View style={tw('h-full items-center justify-center ml-auto')}>
           <TouchableOpacity
@@ -88,7 +91,7 @@ export default function User() {
       </View>
       <ScrollView
         style={tw('px-3')}
-        contentContainerStyle={tw('flex-row gap-2 flex-wrap justify-center ')}>
+        contentContainerStyle={tw('flex-row gap-2 flex-wrap justify-evenly ')}>
         {favItems.map(({id, image, title}) => {
           return (
             <FavCard
@@ -130,12 +133,19 @@ let FavCard = ({id, image, title, setter}: FavCardType) => {
   let handleAddToFav = () => {
     deleteSaved(String(id), setter);
   };
+  let [imageFailed, setIsFailed] = useState(false);
 
   return (
     <TouchableOpacity
       onPress={changeScreen}
       style={[tw(' gap-2 w-[46%] relative')]}>
-      <FastImage style={tw('w-full h-60 rounded-md')} source={{uri: image}} />
+      <FastImage
+        onError={() => {
+          setIsFailed(true);
+        }}
+        style={tw('w-full h-60 rounded-md')}
+        source={imageFailed ? fall : {uri: image}}
+      />
       <Text>{title}</Text>
       <TouchableOpacity
         onPress={handleAddToFav}

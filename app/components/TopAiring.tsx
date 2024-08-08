@@ -23,7 +23,7 @@ export default function TopAiring() {
     <View style={tw('px-4 gap-3')}>
       <DTitle title="Popular" navigateTO={navigateTO} />
 
-      <ScrollView horizontal contentContainerStyle={tw('gap-2 ')}>
+      <ScrollView horizontal contentContainerStyle={tw('gap-2 pb-4 ')}>
         {release?.results.slice(0, 10).map(({image, id, title}) => {
           return (
             <DefaultCard

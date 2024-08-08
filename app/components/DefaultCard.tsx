@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Image, Text, TouchableOpacity} from 'react-native';
 import {IAnimeEntry} from '../exports/interface';
 import {
@@ -11,7 +11,7 @@ import {
 } from '../exports/exports';
 import {GoCheckCircleFill, GoTag} from 'rn-icons/go';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
 let DefaultCard = ({image, title, id}: IAnimeEntry) => {
@@ -51,7 +51,14 @@ let DefaultCard = ({image, title, id}: IAnimeEntry) => {
     // });
     // setIsFav(checker(String(id))); // Update the favorite status
   };
-
+  useFocusEffect(
+    useCallback(() => {
+      setIsFav(checker(String(id)));
+      return () => {
+        // Cleanup actions if needed
+      };
+    }, []),
+  );
   return (
     <TouchableOpacity
       onPress={changeScreen}
